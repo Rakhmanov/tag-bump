@@ -30,5 +30,6 @@ jobs:
         with:
           tag_name: ${{ env.major_version }} 
           target_commitish: ${{ github.event.release.target_commitish }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
