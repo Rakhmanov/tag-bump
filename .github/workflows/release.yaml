@@ -26,9 +26,10 @@ jobs:
 
       - name: Update major version tag using action-gh-release
         if: startsWith(github.event.release.tag_name, '1.')  # Only act on tags starting with '1.'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v1\
         with:
           tag_name: ${{ env.major_version }} 
           target_commitish: ${{ github.event.release.target_commitish }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
