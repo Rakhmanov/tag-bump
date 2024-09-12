@@ -27,12 +27,8 @@ jobs:
           major_version=$(echo "$tag_name" | grep -oE '^[0-9]+')
           echo "major_version=v$major_version" >> $GITHUB_ENV
 
-      - name: Update major version tag using action-gh-release
+      - name: Force update major version tag
         if: startsWith(github.event.release.tag_name, '1.')  # Only act on tags starting with '1.'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.major_version }} 
-          target_commitish: ${{ github.event.release.target_commitish }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git tag ${{ env.major_version }} ${{ github.sha }}  # Create a new tag pointing to the current commit
+          git push origin ${{ env.major_version }} --force  # Push the tag to the remote repository
