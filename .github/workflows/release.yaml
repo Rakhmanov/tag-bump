@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Git user
         run: |
@@ -29,7 +29,7 @@ jobs:
 
       - name: Update major version tag using action-gh-release
         if: startsWith(github.event.release.tag_name, '1.')  # Only act on tags starting with '1.'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.major_version }} 
           target_commitish: ${{ github.event.release.target_commitish }}
