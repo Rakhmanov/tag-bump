@@ -4,6 +4,9 @@ on:
   release:
     types: [published]  # Trigger the workflow when a new release is published
 
+permissions:
+  contents: write
+
 jobs:
   update-major-version-tag:
     runs-on: ubuntu-latest
@@ -30,5 +33,6 @@ jobs:
         with:
           tag_name: ${{ env.major_version }} 
           target_commitish: ${{ github.event.release.target_commitish }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
