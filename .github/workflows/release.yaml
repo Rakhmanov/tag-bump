@@ -1,0 +1,34 @@
+name: Update Major Version Tag on Release
+
+on:
+  release:
+    types: [published]  # Trigger the workflow when a new release is published
+
+jobs:
+  update-major-version-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Determine major version and set environment variable
+        id: determine_version
+        run: |
+          tag_name=${GITHUB_REF##*/}
+          major_version=$(echo "$tag_name" | grep -oE '^[0-9]+')
+          echo "major_version=v$major_version" >> $GITHUB_ENV
+
+      - name: Update major version tag using action-gh-release
+        if: startsWith(github.event.release.tag_name, '1.')  # Only act on tags starting with '1.'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.major_version }} 
+          target_commitish: ${{ github.event.release.target_commitish }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
